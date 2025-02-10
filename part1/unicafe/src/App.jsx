@@ -1,14 +1,15 @@
 import { useState } from 'react'
 
 const StatisticsLine = ({text, value}) => {
-  // console.log(props)
   return (
-    <p>{text} {value}</p>
+    <tr>
+      <td>{text}</td>
+      <td>{value}</td>
+    </tr>
   )
 }
 
 const Statistics = (props) => {
-  console.log("props", props)
   if (props.total === 0) {
     return (
       <div>
@@ -20,12 +21,16 @@ const Statistics = (props) => {
   return (
     <div>
       <h1>Statistics</h1>
-      <StatisticsLine text="Good:" value={props.good} />
-      <StatisticsLine text="Neutral:" value={props.neutral} />
-      <StatisticsLine text="Bad:" value={props.bad} />
-      <StatisticsLine text="All:" value={props.total} />
-      <StatisticsLine text="Average:" value={props.average} />
-      <StatisticsLine text="Positive:" value={props.positive + '%'} />
+      <table>
+        <tbody>
+          <StatisticsLine text="Good:" value={props.good} />
+          <StatisticsLine text="Neutral:" value={props.neutral} />
+          <StatisticsLine text="Bad:" value={props.bad} />
+          <StatisticsLine text="All:" value={props.total} />
+          <StatisticsLine text="Average:" value={props.average} />
+          <StatisticsLine text="Positive:" value={props.positive + '%'} />
+        </tbody>
+      </table>
     </div>
   )
 }

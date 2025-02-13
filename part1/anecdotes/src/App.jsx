@@ -16,23 +16,34 @@ const App = () => {
   const [selectedIndex, setSelectedIndex] = useState(0)
   const [voteCounts, setVoteCounts] = useState([...votes])
 
-  const nextAnecdote = () => (
+  const mostVotes = Math.max(...voteCounts)
+
+  const indexOfMostVotes = voteCounts.indexOf(mostVotes)
+
+  const nextAnecdote = () => {
     setSelectedIndex(Math.floor(Math.random() * anecdotes.length))
-  )
+  }
 
   const handleVote = () => {
+    // copy
     const copyOfVotes = [...voteCounts]
-    copyOfVotes[selectedIndex] = voteCounts[selectedIndex] + 1
+    // update
+    copyOfVotes[selectedIndex] += 1
+    // set
     setVoteCounts(copyOfVotes)
-    console.log('rendering...', copyOfVotes)
-}
+  };
 
   return (
     <div>
+      <h1>Anecdote of the day</h1>
       <button onClick={handleVote}>Vote</button>
       <button onClick={nextAnecdote}>Next anecdote</button>
       <p>{anecdotes[selectedIndex]}</p>
       <p>has {voteCounts[selectedIndex]} votes</p>
+      <h1>Anecdote with the most votes</h1>
+      <p>{anecdotes[indexOfMostVotes]}</p>
+      <p>has {mostVotes} votes</p>
+
     </div>
   )
 }

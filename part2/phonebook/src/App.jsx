@@ -42,14 +42,20 @@ useEffect(() => {
   const handleSubmit = (event) => {
     event.preventDefault()
     
-    const newPersonObject = { name: newName, number: newNumber, id: String(persons.length + 1) }
+    const newPersonObject = { name: newName, number: newNumber }
 
-    nameExists() 
-      ? alert(`${newName} is already added to phonebook`) 
-      : setPersons(persons.concat(newPersonObject))
-    
-    setNewName('')
-    setNewNumber('')
+    axios.post('http://localhost:3001/persons', newPersonObject)
+      .then(response => response.data)
+      .then(response => {
+        nameExists()
+        ? alert(`${newName} is already added to phonebook`)
+        : setPersons([ ...persons, response ])
+      })
+      .catch(error => alert(error.message))
+      .finally(() => {
+        setNewName('')
+        setNewNumber('')
+      })
   }
 
   return (

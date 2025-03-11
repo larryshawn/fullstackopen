@@ -2,7 +2,6 @@ import { useState, useEffect } from 'react'
 import SearchFilter from './components/SearchFilter'
 import Form from './components/Form'
 import PhonebookEntries from './components/PhonebookEntries'
-import axios from 'axios'
 import personServices from './services/persons'
 
 const App = () => {
@@ -45,7 +44,7 @@ useEffect(() => {
     
     const newPersonObject = { name: newName, number: newNumber }
 
-    personServices.create(newPersonObject)
+    personServices.createPerson(newPersonObject)
       .then(response => {
         nameExists()
         ? alert(`${newName} is already added to phonebook`)
@@ -74,7 +73,7 @@ useEffect(() => {
             ?
             <PhonebookEntries array={filteredPersons} />
             :
-            <PhonebookEntries array={persons} />
+            <PhonebookEntries array={persons} setPersons={setPersons} />
           }
         </div>
     </div>

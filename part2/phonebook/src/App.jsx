@@ -39,22 +39,40 @@ useEffect(() => {
 
   const nameExists = () => persons.some(person => person.name.toLowerCase() === newName.toLowerCase())
 
+  const personToReplace = () => persons.find((p) => p.name.toLowerCase() === newName.toLocaleLowerCase())
+
   const handleSubmit = (event) => {
     event.preventDefault()
     
     const newPersonObject = { name: newName, number: newNumber }
+    const changedNumber = { ...personToReplace(), number: newNumber }
 
-    personServices.createPerson(newPersonObject)
+    if (nameExists()) {
+      if (!window.confirm(`${newName} is already added to phonebook, replace the old number with a new one?`))
+        return
+      
+      personServices.replacePerson(changedNumber)
       .then(response => {
-        nameExists()
-        ? alert(`${newName} is already added to phonebook`)
-        : setPersons([ ...persons, response ])
+        setPersons(persons.map(p => p.id === changedNumber.id ? response : p))
       })
       .catch(error => alert(error.message))
       .finally(() => {
         setNewName('')
         setNewNumber('')
       })
+    }
+    else {
+      personServices.createPerson(newPersonObject)
+      .then(response => {
+          setPersons([ ...persons, response ])
+        }
+      )
+      .catch(error => alert(error.message))
+      .finally(() => {
+        setNewName('')
+        setNewNumber('')
+      })
+    }
   }
 
   return (
@@ -66,16 +84,15 @@ useEffect(() => {
       <Form onSubmit={handleSubmit} onNameChange={handleNameChange} nameValue={newName} onNumberChange={handleNumberChange} numberValue={newNumber} />
       
       <h2>Numbers</h2>
-
-        <div>
-          {
-            filteredPersons.length > 0
-            ?
-            <PhonebookEntries array={filteredPersons} />
-            :
-            <PhonebookEntries array={persons} setPersons={setPersons} />
-          }
-        </div>
+      <div>
+        {
+          filteredPersons.length > 0
+          ?
+          <PhonebookEntries array={filteredPersons} />
+          :
+          <PhonebookEntries array={persons} setPersons={setPersons} />
+        }
+      </div>
     </div>
   )
 }

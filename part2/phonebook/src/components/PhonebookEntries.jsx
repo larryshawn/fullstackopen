@@ -7,7 +7,9 @@ const PhonebookEntries = ({ array, setPersons }) => {
       return
     }
     personServices.deleteByID(person.id)
-    setPersons(array.filter((p) => p.id !== person.id))
+    .then(
+      setPersons(array.filter((p) => p.id !== person.id)))
+    .catch(error => alert(`There was an error deleting: ${error}`))
   }
 
   return (

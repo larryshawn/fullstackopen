@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import SearchFilter from './components/SearchFilter'
 import Form from './components/Form'
+import Notification from './components/Notification'
 import PhonebookEntries from './components/PhonebookEntries'
 import personServices from './services/persons'
 
@@ -10,6 +11,7 @@ const App = () => {
   const [newNumber, setNewNumber] = useState('')
   const [searchTerm, setSearchTerm] = useState('')
   const [filteredPersons, setFilteredPersons] = useState([])
+  const [notificationMessage, setNotificationMessage] = useState(null)
 
 useEffect(() => {
   personServices.getAll()
@@ -41,6 +43,10 @@ useEffect(() => {
 
   const personToReplace = () => persons.find((p) => p.name.toLowerCase() === newName.toLocaleLowerCase())
 
+  // const showAdded = () => {
+
+  // }
+
   const handleSubmit = (event) => {
     event.preventDefault()
     
@@ -64,8 +70,12 @@ useEffect(() => {
     else {
       personServices.createPerson(newPersonObject)
       .then(response => {
-          setPersons([ ...persons, response ])
-        }
+        setPersons([ ...persons, response ])
+        setNotificationMessage(`added ${newName}`)
+        setTimeout(() => {
+          setNotificationMessage(null)
+        }, 5000)
+      }
       )
       .catch(error => alert(error.message))
       .finally(() => {
@@ -78,6 +88,7 @@ useEffect(() => {
   return (
     <div>
       <h2>Phonebook</h2>
+      <Notification type='success' message={notificationMessage} />
       <SearchFilter onSearchTermChange={handleSearchTermChange} searchTermValue={searchTerm} />
       
       <h2>Add a new</h2>
